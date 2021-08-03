@@ -6,6 +6,7 @@ import 'package:auctionapp/infrastructure/models/bidModel.dart';
 import 'package:auctionapp/infrastructure/models/postModel.dart';
 import 'package:auctionapp/infrastructure/models/userModel.dart';
 import 'package:auctionapp/infrastructure/services/auctionServices.dart';
+import 'package:auctionapp/infrastructure/services/notificationHandler.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 
@@ -61,6 +62,8 @@ class _PostDetailsState extends State<PostDetails> {
               : _getUI(context);
         });
   }
+
+  NotificationHandler _notificationHandler = NotificationHandler();
 
   Widget _getUI(BuildContext context) {
     return Scaffold(
@@ -344,6 +347,10 @@ class _PostDetailsState extends State<PostDetails> {
                             borderRadius: BorderRadius.circular(12)),
                         child: InkWell(
                           onTap: () {
+                            _notificationHandler.oneToOneNotificationHelper(
+                                docID: widget.model.uid,
+                                body: "You have new bid on your post.",
+                                title: "Bid Updated");
                             _postServices.addBidderID(context,
                                 postID: widget.model.docID,
                                 docID: userModel.docID);

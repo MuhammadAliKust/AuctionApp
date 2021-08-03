@@ -33,6 +33,11 @@ class PostServices {
         event.docs.map((e) => AuctionModel.fromJson(e.data())).toList());
   }
 
+  ///Delete Post
+  Future<void> deletePost(String postID) {
+    return _auctionCollection.doc(postID).delete();
+  }
+
   ///Get Post
   Stream<List<AuctionModel>> getActivePosts() {
     return _auctionCollection

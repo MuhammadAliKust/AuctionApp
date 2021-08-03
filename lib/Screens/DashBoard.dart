@@ -10,6 +10,9 @@ import 'package:auctionapp/infrastructure/models/postModel.dart';
 import 'package:auctionapp/infrastructure/models/userModel.dart';
 import 'package:auctionapp/infrastructure/services/auctionServices.dart';
 import 'package:auctionapp/infrastructure/services/authServices.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:localstorage/localstorage.dart';
@@ -29,6 +32,29 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   UserModel userModel = UserModel();
   bool initialized = false;
   AuthServices _authServices = AuthServices.instance();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  @override
+  void initState() {
+    _initFcm();
+
+    super.initState();
+  }
+
+  Future<dynamic> _getLocalData() async {
+    return await storage.getItem(BackEndConfigs.userDetailsLocalStorage);
+  }
+
+  Future<void> _initFcm() async {
+    print("Firebase Token");
+    var uid = FirebaseAuth.instance.currentUser.uid;
+    _firebaseMessaging.getToken().then((token) {
+      FirebaseFirestore.instance.collection('deviceTokens').doc(uid).set(
+        {
+          'deviceTokens': token,
+        },
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

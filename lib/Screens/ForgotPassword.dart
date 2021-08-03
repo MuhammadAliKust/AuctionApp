@@ -1,5 +1,13 @@
+import 'package:auctionapp/Screens/bothApps.dart';
+import 'package:auctionapp/Widgets/dialog.dart';
+import 'package:auctionapp/Widgets/navigation_dialog.dart';
+import 'package:auctionapp/application/errorStrings.dart';
+import 'package:auctionapp/configs/enums.dart';
+import 'package:auctionapp/infrastructure/services/authServices.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:provider/provider.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key key}) : super(key: key);
@@ -11,7 +19,7 @@ class ForgotPassword extends StatefulWidget {
 class _ForgotPasswordState extends State<ForgotPassword> {
   TextEditingController _forgotpwdcontroller = TextEditingController();
   var _formKey = GlobalKey<FormState>();
-
+  ProgressDialog pr;
   void _submit() {
     final isValid = _formKey.currentState.validate();
     if (!isValid) {
@@ -22,6 +30,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   @override
   Widget build(BuildContext context) {
+    pr = ProgressDialog(context, isDismissible: false);
     return Scaffold(
       body: Form(
         key: _formKey,
@@ -139,6 +148,35 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               SizedBox(
                 height: 20,
               ),
+              GestureDetector(
+                onTap: () async {
+                  if (!_formKey.currentState.validate()) {
+                    return;
+                  }
+                  await pr.show();
+                  _forgotPassword(context);
+                },
+                child: Container(
+                  height: 75,
+                  width: 350,
+                  child: Card(
+                    color: Color(0xff209CEE),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(33)),
+                    child: Center(
+                      child: Text(
+                        "Send Email",
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                              color: Colors.white,
+                              fontSize: 26,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               SizedBox(
                 height: 40,
               ),
@@ -147,5 +185,27 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         ),
       ),
     );
+  }
+
+  _forgotPassword(BuildContext context) {
+    AuthServices _services = Provider.of<AuthServices>(context, listen: false);
+    _services
+        .forgotPassword(context, email: _forgotpwdcontroller.text)
+        .then((val) async {
+      await pr.hide();
+      if (_services.status == Status.Authenticated) {
+        showNavigationDialog(context,
+            message:
+                "An email with password reset link has been sent to your email inbox",
+            buttonText: "Okay", navigation: () {
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => BothApps()));
+        }, secondButtonText: "", showSecondButton: false);
+      } else {
+        showErrorDialog(context,
+            message: Provider.of<ErrorString>(context, listen: false)
+                .getErrorString());
+      }
+    });
   }
 }
