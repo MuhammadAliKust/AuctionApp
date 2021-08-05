@@ -7,6 +7,7 @@ import 'package:auctionapp/infrastructure/models/postModel.dart';
 import 'package:auctionapp/infrastructure/models/userModel.dart';
 import 'package:auctionapp/infrastructure/services/auctionServices.dart';
 import 'package:auctionapp/infrastructure/services/uploadFileServices.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -78,6 +79,7 @@ class _CreatePostsState extends State<CreatePosts> {
   }
 
   Widget _getUI(BuildContext context) {
+    print(TimeOfDay.now());
     pr = ProgressDialog(context, isDismissible: true);
     var status = Provider.of<AppState>(context);
     return Scaffold(
@@ -364,7 +366,13 @@ class _CreatePostsState extends State<CreatePosts> {
                 ),
               ),
             ),
-
+            Text(_selectedTime == null ? "" : _selectedTime.minute.toString()),
+            RaisedButton(
+              onPressed: () {
+                _show();
+              },
+              child: Text("Select Timer for Bid"),
+            ),
             SizedBox(
               height: 20,
             ),
@@ -430,6 +438,21 @@ class _CreatePostsState extends State<CreatePosts> {
     );
   }
 
+  DateTime _selectedTime;
+
+  // We don't need to pass a context to the _show() function
+  // You can safety use context as below
+  Future<void> _show() async {
+    final TimeOfDay result =
+        await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    if (result != null) {
+      setState(() {
+        _selectedTime = DateTime(DateTime.now().year, DateTime.now().month,
+            DateTime.now().day, result.hour, result.minute);
+      });
+    }
+  }
+
   Future getFile() async {
     _file = await FilePicker.getFile();
     setState(() {
@@ -459,6 +482,7 @@ class _CreatePostsState extends State<CreatePosts> {
             users: [],
             image: fileUrl,
             isActive: true,
+            bidTimer: Timestamp.fromDate(_selectedTime),
             comments: []),
       );
     }).then((value) async {

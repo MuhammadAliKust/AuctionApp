@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class AuctionModel {
   String uid;
   String docID;
@@ -11,6 +13,7 @@ class AuctionModel {
   List users;
   bool isActive;
   List comments;
+  Timestamp bidTimer;
 
   AuctionModel({
     this.docID,
@@ -25,6 +28,7 @@ class AuctionModel {
     this.isActive,
     this.comments,
     this.image,
+    this.bidTimer,
   });
 
   AuctionModel.fromJson(Map<String, dynamic> json) {
@@ -40,6 +44,7 @@ class AuctionModel {
     isActive = json['isActive'];
     comments = json['comments'];
     image = json['image'];
+    bidTimer = json['bidTimer'];
   }
 
   Map<String, dynamic> toJson(String docID) {
@@ -56,6 +61,7 @@ class AuctionModel {
     data['isActive'] = this.isActive;
     data['comments'] = this.comments;
     data['image'] = this.image;
+    data['bidTimer'] = this.bidTimer;
     return data;
   }
 }

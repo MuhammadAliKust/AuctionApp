@@ -310,85 +310,87 @@ class _PostDetailsState extends State<PostDetails> {
             SizedBox(
               height: 10,
             ),
-            if (widget.model.isActive)
-              if (userModel.docID != widget.model.uid)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 60,
-                      width: 310,
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(13)),
-                        color: Colors.white54,
-                        elevation: 4,
-                        child: TextFormField(
-                          controller: _controller,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.only(left: 10, top: 13),
-                            hintText: "Place Your Bid Here",
-                            hintStyle: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600),
+            if (DateTime.now().isBefore(widget.model.bidTimer.toDate()))
+              if (widget.model.isActive)
+                if (userModel.docID != widget.model.uid)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 60,
+                        width: 310,
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(13)),
+                          color: Colors.white54,
+                          elevation: 4,
+                          child: TextFormField(
+                            controller: _controller,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              contentPadding:
+                                  EdgeInsets.only(left: 10, top: 13),
+                              hintText: "Place Your Bid Here",
+                              hintStyle: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Container(
-                      height: 60,
-                      width: 60,
-                      child: Card(
-                        color: Color(0xff209CEE),
-                        elevation: 6,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                        child: InkWell(
-                          onTap: () {
-                            _notificationHandler.oneToOneNotificationHelper(
-                                docID: widget.model.uid,
-                                body: "You have new bid on your post.",
-                                title: "Bid Updated");
-                            _postServices.addBidderID(context,
-                                postID: widget.model.docID,
-                                docID: userModel.docID);
-                            _postServices
-                                .addBids(context,
-                                    eventID: widget.model.docID,
-                                    comment: BidModel(
-                                        name: userModel.firstName +
-                                            " " +
-                                            userModel.lastName,
-                                        commentText: _controller.text,
-                                        time:
-                                            "${DateTime.now().hour}:${DateTime.now().minute}",
-                                        image: userModel.profilePic))
-                                .then((value) => showNavigationDialog(context,
-                                        message: "Bid Done Successfully",
-                                        buttonText: "Okay", navigation: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  DashBoardScreen()));
-                                    },
-                                        secondButtonText: "",
-                                        showSecondButton: false));
-                          },
-                          child: Icon(
-                            Icons.send,
-                            color: Colors.white,
+                      Container(
+                        height: 60,
+                        width: 60,
+                        child: Card(
+                          color: Color(0xff209CEE),
+                          elevation: 6,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          child: InkWell(
+                            onTap: () {
+                              _notificationHandler.oneToOneNotificationHelper(
+                                  docID: widget.model.uid,
+                                  body: "You have new bid on your post.",
+                                  title: "Bid Updated");
+                              _postServices.addBidderID(context,
+                                  postID: widget.model.docID,
+                                  docID: userModel.docID);
+                              _postServices
+                                  .addBids(context,
+                                      eventID: widget.model.docID,
+                                      comment: BidModel(
+                                          name: userModel.firstName +
+                                              " " +
+                                              userModel.lastName,
+                                          commentText: _controller.text,
+                                          time:
+                                              "${DateTime.now().hour}:${DateTime.now().minute}",
+                                          image: userModel.profilePic))
+                                  .then((value) => showNavigationDialog(context,
+                                          message: "Bid Done Successfully",
+                                          buttonText: "Okay", navigation: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DashBoardScreen()));
+                                      },
+                                          secondButtonText: "",
+                                          showSecondButton: false));
+                            },
+                            child: Icon(
+                              Icons.send,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    )
-                  ],
-                )
+                      SizedBox(
+                        height: 10,
+                      )
+                    ],
+                  )
           ],
         ),
       ),
