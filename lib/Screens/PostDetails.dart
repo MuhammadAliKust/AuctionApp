@@ -296,6 +296,8 @@ class _PostDetailsState extends State<PostDetails> {
                               message:
                                   "Do you really want to accept this offer?",
                               buttonText: "Yes", navigation: () {
+                            _postServices.addBidderID(context,
+                                docID: widget.model.comments[i]['uid']);
                             _postServices.acceptBid(context,
                                 docID: widget.model.docID);
                             Navigator.push(
@@ -360,6 +362,7 @@ class _PostDetailsState extends State<PostDetails> {
                                   .addBids(context,
                                       eventID: widget.model.docID,
                                       comment: BidModel(
+                                          uid: userModel.docID,
                                           name: userModel.firstName +
                                               " " +
                                               userModel.lastName,

@@ -14,6 +14,7 @@ class AuctionModel {
   bool isActive;
   List comments;
   Timestamp bidTimer;
+  String topBidderID;
 
   AuctionModel({
     this.docID,
@@ -29,6 +30,7 @@ class AuctionModel {
     this.comments,
     this.image,
     this.bidTimer,
+    this.topBidderID,
   });
 
   AuctionModel.fromJson(Map<String, dynamic> json) {
@@ -45,6 +47,7 @@ class AuctionModel {
     comments = json['comments'];
     image = json['image'];
     bidTimer = json['bidTimer'];
+    topBidderID = json['topBidderID'];
   }
 
   Map<String, dynamic> toJson(String docID) {
@@ -62,6 +65,7 @@ class AuctionModel {
     data['comments'] = this.comments;
     data['image'] = this.image;
     data['bidTimer'] = this.bidTimer;
+    data['topBidderID'] = this.topBidderID;
     return data;
   }
 }

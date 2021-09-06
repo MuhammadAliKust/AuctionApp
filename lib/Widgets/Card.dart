@@ -74,6 +74,18 @@ class _CardState extends State<CardPost> {
                     ),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 25.0),
+                  child: Text(
+                    widget.model.bidTimer.toDate().toString(),
+                    style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                          color: Colors.black,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  ),
+                ),
                 SizedBox(
                   width: 20,
                 ),

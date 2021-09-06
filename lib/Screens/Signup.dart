@@ -7,6 +7,7 @@ import 'package:auctionapp/infrastructure/models/userModel.dart';
 import 'package:auctionapp/infrastructure/services/authServices.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
@@ -136,6 +137,10 @@ class _SignupState extends State<Signup> {
                               height: 50,
                               width: 130,
                               child: TextFormField(
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp("[a-zA-Z]")),
+                                ],
                                 onFieldSubmitted: (value) {},
                                 validator: (value) {
                                   if (value.isEmpty) {
@@ -158,6 +163,10 @@ class _SignupState extends State<Signup> {
                               height: 50,
                               width: 130,
                               child: TextFormField(
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp("[a-zA-Z]")),
+                                ],
                                 onFieldSubmitted: (value) {},
                                 validator: (value) {
                                   if (value.isEmpty) {

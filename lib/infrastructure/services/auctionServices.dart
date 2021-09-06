@@ -56,6 +56,14 @@ class PostServices {
             event.docs.map((e) => AuctionModel.fromJson(e.data())).toList());
   }
 
+  Stream<List<AuctionModel>> getMyAcceptedBiddings(String uid) {
+    return _auctionCollection
+        .where('topBidderID', isEqualTo: uid)
+        .snapshots()
+        .map((event) =>
+            event.docs.map((e) => AuctionModel.fromJson(e.data())).toList());
+  }
+
   ///Accept Bid
   Future<void> acceptBid(BuildContext context, {String docID}) async {
     Provider.of<AppState>(context, listen: false)
@@ -63,6 +71,16 @@ class PostServices {
     DocumentReference docRef =
         FirebaseFirestore.instance.collection('auctionCollection').doc(docID);
     await docRef.update({'isActive': false});
+    Provider.of<AppState>(context, listen: false)
+        .stateStatus(StateStatus.IsFree);
+  }
+
+  Future<void> addTopBidderID(BuildContext context, {String docID}) async {
+    Provider.of<AppState>(context, listen: false)
+        .stateStatus(StateStatus.IsBusy);
+    DocumentReference docRef =
+        FirebaseFirestore.instance.collection('auctionCollection').doc(docID);
+    await docRef.update({'topBidderID': docID});
     Provider.of<AppState>(context, listen: false)
         .stateStatus(StateStatus.IsFree);
   }

@@ -11,7 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -210,6 +210,10 @@ class _CreatePostsState extends State<CreatePosts> {
                             height: 50,
                             width: 340,
                             child: TextFormField(
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp("[a-zA-Z]")),
+                              ],
                               onFieldSubmitted: (value) {},
                               controller: _titleController,
                               validator: (value) {
@@ -299,6 +303,11 @@ class _CreatePostsState extends State<CreatePosts> {
                             height: 50,
                             width: 340,
                             child: TextFormField(
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp("[0-9]")),
+                              ],
                               onFieldSubmitted: (value) {},
                               validator: (value) {
                                 if (value.isEmpty) {
@@ -366,7 +375,9 @@ class _CreatePostsState extends State<CreatePosts> {
                 ),
               ),
             ),
-            Text(_selectedTime == null ? "" : _selectedTime.minute.toString()),
+            Text(_selectedTime == null
+                ? ""
+                : "${_selectedTime.hour.toString() + ":" + _selectedTime.minute.toString()}"),
             RaisedButton(
               onPressed: () {
                 _show();
@@ -496,80 +507,5 @@ class _CreatePostsState extends State<CreatePosts> {
         }, secondButtonText: "", showSecondButton: false);
       }
     });
-  }
-}
-
-class CustomPicker extends CommonPickerModel {
-  String digits(int value, int length) {
-    return '$value'.padLeft(length, "0");
-  }
-
-  CustomPicker({DateTime currentTime, LocaleType locale})
-      : super(locale: locale) {
-    this.currentTime = currentTime ?? DateTime.now();
-    this.setLeftIndex(this.currentTime.hour);
-    this.setMiddleIndex(this.currentTime.minute);
-    this.setRightIndex(this.currentTime.second);
-  }
-
-  @override
-  String leftStringAtIndex(int index) {
-    if (index >= 0 && index < 24) {
-      return this.digits(index, 2);
-    } else {
-      return null;
-    }
-  }
-
-  @override
-  String middleStringAtIndex(int index) {
-    if (index >= 0 && index < 60) {
-      return this.digits(index, 2);
-    } else {
-      return null;
-    }
-  }
-
-  @override
-  String rightStringAtIndex(int index) {
-    if (index >= 0 && index < 60) {
-      return this.digits(index, 2);
-    } else {
-      return null;
-    }
-  }
-
-  @override
-  String leftDivider() {
-    return "|";
-  }
-
-  @override
-  String rightDivider() {
-    return "|";
-  }
-
-  @override
-  List<int> layoutProportions() {
-    return [1, 2, 1];
-  }
-
-  @override
-  DateTime finalTime() {
-    return currentTime.isUtc
-        ? DateTime.utc(
-            currentTime.year,
-            currentTime.month,
-            currentTime.day,
-            this.currentLeftIndex(),
-            this.currentMiddleIndex(),
-            this.currentRightIndex())
-        : DateTime(
-            currentTime.year,
-            currentTime.month,
-            currentTime.day,
-            this.currentLeftIndex(),
-            this.currentMiddleIndex(),
-            this.currentRightIndex());
   }
 }

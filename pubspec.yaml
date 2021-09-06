@@ -43,6 +43,7 @@ dependencies:
   progress_dialog: ^1.2.4
   shared_preferences: ^2.0.6
   firebase_messaging: ^10.0.4
+  razorpay_flutter: ^1.2.7
  
   
 

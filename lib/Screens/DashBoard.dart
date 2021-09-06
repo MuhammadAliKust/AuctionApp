@@ -18,6 +18,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:provider/provider.dart';
 
+import 'acceptedBiddings.dart';
+
 class DashBoardScreen extends StatefulWidget {
   const DashBoardScreen({Key key}) : super(key: key);
 
@@ -33,6 +35,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   bool initialized = false;
   AuthServices _authServices = AuthServices.instance();
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
   @override
   void initState() {
     _initFcm();
@@ -183,6 +186,22 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                           )),
                       title: Text(
                         "My Biddings",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    ListTile(
+                      onTap: () => selectedItem(context, 5),
+                      leading: Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Icon(
+                            Icons.bakery_dining,
+                            color: Color(0xff209CEE),
+                          )),
+                      title: Text(
+                        "My Accepted Biddings",
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 17,
@@ -390,6 +409,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       case 4:
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => MyBddings()));
+        break;
+      case 5:
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => AcceptedBiddings()));
         break;
     }
   }
